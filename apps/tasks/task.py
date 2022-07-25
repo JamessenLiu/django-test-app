@@ -1,6 +1,6 @@
 import os
 import django
-from celery import Celery
+from celery import Celery, platforms
 from django.conf import settings
 
 config = os.getenv("MODE")
@@ -22,6 +22,6 @@ app = Celery(
         RABBIT_MQ_USER, RABBIT_MQ_PASSWORD, RABBIT_MQ_IP, RABBIT_MQ_PORT
     )
 )
-
+platforms.C_FORCE_ROOT = True
 app.config_from_object(
     "apps.tasks.celery_config", silent=True)
