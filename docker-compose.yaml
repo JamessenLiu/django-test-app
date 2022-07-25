@@ -1,0 +1,54 @@
+version: '2'
+services:
+  db:
+    container_name: postgres-db
+    image: 'postgres:11.4'
+    environment:
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: 'UTC'
+    restart: always
+    volumes:
+      - './data.sql:/docker-entrypoint-initdb.d/init.sql'
+      - 'postgres_data:/var/lib/postgresql/data/pgdata'
+    ports:
+      - "5432:5432"
+  redis:
+    restart: always
+    image: redis:5.0.0
+    container_name: redis-db
+    command: redis-server --requirepass password
+    ports:
+      - "6379:6379"
+  rabbitmq:
+    image: rabbitmq:3.7
+    ports:
+      - "15673:15672"
+    restart: always
+    command:
+      - sh
+      - -c
+      - >
+        rabbitmq-server&
+        sleep 15&&
+        rabbitmqctl add_vhost backend&&
+        rabbitmqctl add_vhost broker&&
+        rabbitmqctl add_user root root&&
+        rabbitmqctl set_user_tags root administrator&&
+        rabbitmqctl set_permissions -p backend root ".*" ".*" ".*"&&
+        rabbitmqctl set_permissions -p broker root ".*" ".*" ".*"&&
+        wait
+  web:
+    container_name: python-3.6
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    depends_on:
+      - db
+      - rabbitmq
+volumes:
+  postgres_data:
