@@ -2,4 +2,5 @@
 
 sleep 35
 
-celery -A apps.tasks.task worker -Q default --loglevel=debug
+MODE=$1 watchmedo auto-restart --directory=./  -p "*.py" --recursive -- celery -A applications.v2.tasks.task worker -Q default --loglevel=debug &
+

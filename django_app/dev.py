@@ -8,7 +8,7 @@ DATABASES = {
         'NAME': 'django-app',
         'USER': 'postgres',
         'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': 5432
     }
 }
@@ -31,3 +31,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# rabbit mq
+RABBIT_MQ_USER = "root"
+RABBIT_MQ_PASSWORD = "root"
+RABBIT_MQ_IP = "rabbitmq"
+RABBIT_MQ_PORT = "5672"
