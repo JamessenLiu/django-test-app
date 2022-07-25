@@ -142,8 +142,8 @@ class CompaniesExportView(APIView):
             })
         with open('company.csv', 'rb') as f:
             file_content = f.read()
-        response = HttpResponse(file_content, content_type='text/csb')
-        response['Content-Disposition'] = f'attachment; filename=comapny.csv'
+        response = HttpResponse(file_content, content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename=company.csv'
         return response
 
 
